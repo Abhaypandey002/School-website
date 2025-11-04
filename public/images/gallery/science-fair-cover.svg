@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="480" viewBox="0 0 800 480">
+  <rect width="800" height="480" fill="#0ea5e9" />
+  <text x="50%" y="45%" dominant-baseline="middle" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="52" fill="#f8fafc">
+    Science Fair
+  </text>
+  <text x="50%" y="65%" dominant-baseline="middle" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="26" fill="#e0f2fe">
+    Curiosity in action
+  </text>
+</svg>

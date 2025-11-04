@@ -1,0 +1,63 @@
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import { format } from 'date-fns';
+import { galleryAlbums } from '@/src/data/gallery';
+
+interface AlbumPageProps {
+  params: { slug: string };
+}
+
+export function generateStaticParams() {
+  return galleryAlbums.map((album) => ({ slug: album.slug }));
+}
+
+export function generateMetadata({ params }: AlbumPageProps): Metadata {
+  const album = galleryAlbums.find((item) => item.slug === params.slug);
+  if (!album) {
+    return { title: 'Album not found | Akshar Kids School' };
+  }
+
+  return {
+    title: `${album.title} | Akshar Kids School`
+  };
+}
+
+export const dynamicParams = false;
+
+export default function AlbumPage({ params }: AlbumPageProps) {
+  const album = galleryAlbums.find((item) => item.slug === params.slug);
+
+  if (!album) {
+    notFound();
+  }
+
+  return (
+    <div className="bg-white py-16">
+      <div className="container-edge space-y-8">
+        <header className="space-y-3">
+          <p className="text-sm uppercase tracking-wide text-brand-500">
+            {format(new Date(album.eventDate), 'dd MMM yyyy')}
+          </p>
+          <h1 className="section-title">{album.title}</h1>
+          <p className="max-w-3xl text-slate-600">{album.description}</p>
+          <div className="flex flex-wrap gap-2">
+            {album.tags.map((tag) => (
+              <span key={tag} className="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-600">
+                {tag}
+              </span>
+            ))}
+          </div>
+        </header>
+
+        <div className="grid gap-6 sm:grid-cols-2">
+          {album.images.map((image) => (
+            <figure key={image.src} className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+              <img src={image.src} alt={image.alt} className="h-64 w-full object-cover" />
+              <figcaption className="p-4 text-sm text-slate-600">{image.caption}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}

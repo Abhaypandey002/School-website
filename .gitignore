@@ -1,0 +1,15 @@
+node_modules
+.next
+out
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+storage/csv/*.csv
+uploads/
+.DS_Store
+*.log
+pnpm-lock.yaml
+yarn.lock
+package-lock.json
