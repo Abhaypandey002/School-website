@@ -9,6 +9,10 @@ import type { NoticeRecord } from '@/src/services/notices';
 import type { GalleryAlbum } from '@/src/services/gallery';
 import type { TestimonialRecord } from '@/src/services/testimonials';
 
+import type { NoticeRecord } from '@/src/services/notices';
+import type { GalleryAlbum } from '@/src/services/gallery';
+import type { TestimonialRecord } from '@/src/services/testimonials';
+
 export const metadata: Metadata = {
   title: 'Admin | Akshar Kids School'
 };
@@ -55,12 +59,7 @@ function sortAlbums(items: GalleryAlbum[]) {
 }
 
 export default function AdminPage() {
-  const router = useRouter();
-
-  const [ready, setReady] = useState(false);
-  const [authenticated, setAuthenticated] = useState(false);
-
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const [notices, setNotices] = useState<NoticeRecord[]>([]);
@@ -82,25 +81,7 @@ export default function AdminPage() {
   const [submitting, setSubmitting] = useState<string | null>(null);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const authed = window.localStorage.getItem('admin-auth') === '1';
-
-    if (!authed) {
-      router.replace('/admin/login');
-    } else {
-      setAuthenticated(true);
-    }
-
-    setReady(true);
-  }, [router]);
-
-  useEffect(() => {
-    if (!authenticated) return;
-
     async function load() {
-      setLoading(true);
-
       try {
         const [noticeResponse, galleryResponse, testimonialResponse] = await Promise.all([
           fetch('/api/admin/notices').then((res) => res.json() as Promise<NoticeResponse>),
@@ -121,16 +102,7 @@ export default function AdminPage() {
     }
 
     load();
-  }, [authenticated]);
-
-  function handleLogout() {
-    if (typeof window !== 'undefined') {
-      window.localStorage.removeItem('admin-auth');
-    }
-
-    setAuthenticated(false);
-    router.replace('/admin/login');
-  }
+  }, []);
 
   const albumOptions = useMemo(() => albums.map((album) => ({ value: album.slug, label: album.title })), [albums]);
 
@@ -331,37 +303,14 @@ export default function AdminPage() {
     }
   }
 
-  if (!ready) {
-    return (
-      <div className="flex min-h-[60vh] items-center justify-center bg-white">
-        <p className="text-sm text-slate-600">Checking admin access…</p>
-      </div>
-    );
-  }
-
-  if (!authenticated) {
-    return null;
-  }
-
   return (
     <div className="bg-white py-16">
       <div className="container-edge space-y-12">
-        <header className="space-y-4">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-            <div className="space-y-3">
-              <h1 className="section-title">Admin Control Centre</h1>
-              <p className="section-subtitle">
-                Manage the public-facing blackboard notices, gallery albums, testimonials, and download inquiry reports.
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={handleLogout}
-              className="inline-flex items-center justify-center rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:border-brand-400 hover:text-brand-600"
-            >
-              Log out
-            </button>
-          </div>
+        <header className="space-y-3">
+          <h1 className="section-title">Admin Control Centre</h1>
+          <p className="section-subtitle">
+            Manage the public-facing blackboard notices, gallery albums, testimonials, and download inquiry reports.
+          </p>
         </header>
 
         {loading ? (
