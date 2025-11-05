@@ -1,13 +1,17 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { format } from 'date-fns';
-import { galleryAlbums } from '@/src/data/gallery';
+import { getGalleryAlbums } from '@/src/services/gallery';
+
+export const revalidate = 0;
 
 export const metadata: Metadata = {
   title: 'Gallery | Akshar Kids School'
 };
 
-export default function GalleryPage() {
+export default async function GalleryPage() {
+  const galleryAlbums = await getGalleryAlbums();
+
   return (
     <div className="bg-white py-16">
       <div className="container-edge">
@@ -38,6 +42,11 @@ export default function GalleryPage() {
               </div>
             </article>
           ))}
+          {galleryAlbums.length === 0 && (
+            <p className="rounded-2xl border border-dashed border-slate-200 bg-white p-10 text-center text-sm text-slate-500 sm:col-span-2 lg:col-span-3">
+              No albums have been published yet.
+            </p>
+          )}
         </div>
       </div>
     </div>

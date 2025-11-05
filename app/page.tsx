@@ -1,15 +1,16 @@
 import Link from 'next/link';
 import { format } from 'date-fns';
-import {
-  hero,
-  valueProps,
-  notices,
-  tuitionHighlights,
-  upcomingEvents,
-  quickLinks
-} from '@/src/data/content';
+import { hero, valueProps, tuitionHighlights, upcomingEvents, quickLinks } from '@/src/data/content';
+import { getNotices } from '@/src/services/notices';
+import { getTestimonials } from '@/src/services/testimonials';
 
-function NoticeBoard() {
+export const revalidate = 0;
+
+type NoticeBoardProps = {
+  notices: Awaited<ReturnType<typeof getNotices>>;
+};
+
+function NoticeBoard({ notices }: NoticeBoardProps) {
   return (
     <section className="rounded-xl border border-slate-200 bg-slate-900 p-6 text-slate-100 shadow-lg">
       <div className="flex items-center justify-between">
@@ -34,16 +35,62 @@ function NoticeBoard() {
             <p className="mt-2 text-sm text-slate-300">{notice.body}</p>
           </article>
         ))}
+        {notices.length === 0 && (
+          <p className="rounded-lg border border-dashed border-slate-700 bg-slate-900/40 p-4 text-sm text-slate-300">
+            No announcements right now. Check back soon!
+          </p>
+        )}
       </div>
     </section>
   );
 }
 
-export default function HomePage() {
+function TestimonialsSection({ testimonials }: { testimonials: Awaited<ReturnType<typeof getTestimonials>> }) {
+  if (testimonials.length === 0) {
+    return null;
+  }
+
+  const featured = testimonials.slice(0, 3);
+
+  return (
+    <section className="bg-white py-16">
+      <div className="container-edge">
+        <h2 className="section-title">What our community says</h2>
+        <p className="section-subtitle">Voices from parents, alumni, and learners celebrating everyday wins.</p>
+        <div className="mt-10 grid gap-6 md:grid-cols-3">
+          {featured.map((testimonial) => (
+            <blockquote
+              key={testimonial.id}
+              className="flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-slate-50 p-6 shadow-sm"
+            >
+              <p className="text-slate-700">“{testimonial.message}”</p>
+              <footer className="mt-6 text-sm font-medium text-slate-600">
+                <p className="text-brand-700">{testimonial.name}</p>
+                <p className="text-xs uppercase tracking-wide text-slate-400">{testimonial.role}</p>
+              </footer>
+            </blockquote>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export default async function HomePage() {
+  const [notices, testimonials] = await Promise.all([
+    getNotices().then((items) => items.slice(0, 3)),
+    getTestimonials()
+  ]);
+
   return (
     <div className="space-y-20 pb-16">
-      <section className="bg-gradient-to-br from-brand-500 via-brand-600 to-brand-700 py-16 text-white">
-        <div className="container-edge grid gap-12 lg:grid-cols-[2fr_1fr] lg:items-center">
+      <section className="relative overflow-hidden bg-gradient-to-br from-brand-500 via-brand-600 to-brand-700 py-16 text-white">
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute -left-12 top-20 h-72 w-72 rounded-full bg-amber-300/40 blur-3xl mix-blend-screen"></div>
+          <div className="absolute right-[-3rem] top-[-6rem] h-80 w-80 rounded-full bg-brand-300/40 blur-3xl mix-blend-screen"></div>
+          <div className="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-[2.5rem] border border-white/30 bg-white/10 shadow-[0_0_40px_-12px_rgba(255,255,255,0.8)] backdrop-blur-sm"></div>
+        </div>
+        <div className="container-edge relative z-10 grid gap-12 lg:grid-cols-[2fr_1fr] lg:items-center">
           <div className="space-y-6">
             <p className="text-sm uppercase tracking-[0.3em] text-brand-100">Now Enrolling</p>
             <h1 className="text-4xl font-bold sm:text-5xl">{hero.title}</h1>
@@ -64,7 +111,7 @@ export default function HomePage() {
               ))}
             </div>
           </div>
-          <NoticeBoard />
+          <NoticeBoard notices={notices} />
         </div>
       </section>
 
@@ -130,6 +177,8 @@ export default function HomePage() {
           ))}
         </div>
       </section>
+
+      <TestimonialsSection testimonials={testimonials} />
 
       <section className="bg-white py-16">
         <div className="container-edge">

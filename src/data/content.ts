@@ -32,27 +32,6 @@ export const tuitionHighlights = {
   cta: { href: '/after-school-tuition', label: 'Explore Tuition Program' }
 };
 
-export const notices = [
-  {
-    id: 'notice-1',
-    title: 'Unit Test Schedule Released',
-    date: '2024-04-05',
-    body: 'Download the detailed timetable for Std. 1-8 from the notices page.'
-  },
-  {
-    id: 'notice-2',
-    title: 'Summer Camp Registrations',
-    date: '2024-04-02',
-    body: 'Join our STEM and sports summer camp in May. Seats limited!'
-  },
-  {
-    id: 'notice-3',
-    title: 'Parent Orientation',
-    date: '2024-03-25',
-    body: 'New parent orientation is scheduled for 13 April at 9:30 AM in the auditorium.'
-  }
-];
-
 export const upcomingEvents = [
   {
     slug: 'annual-day-2024',

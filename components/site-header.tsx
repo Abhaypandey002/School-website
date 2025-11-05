@@ -22,11 +22,33 @@ export function SiteHeader() {
           <span className="sr-only">Toggle navigation</span>
           ☰
         </button>
-        <nav className="hidden gap-6 text-sm font-medium text-slate-700 sm:flex">
+        <nav className="hidden items-center gap-6 text-sm font-medium text-slate-700 sm:flex">
           {navigation.map((item) => (
-            <Link key={item.href} href={item.href} className="hover:text-brand-600">
-              {item.label}
-            </Link>
+            <div key={item.href} className="relative group">
+              <Link
+                href={item.href}
+                className="inline-flex items-center gap-1 hover:text-brand-600"
+              >
+                <span>{item.label}</span>
+                {item.children ? <span className="text-xs">▾</span> : null}
+              </Link>
+              {item.children && (
+                <div className="invisible absolute left-1/2 top-full z-20 mt-3 w-52 -translate-x-1/2 rounded-lg border border-slate-200 bg-white p-3 text-sm shadow-lg opacity-0 transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                  <ul className="space-y-2">
+                    {item.children.map((child) => (
+                      <li key={child.href}>
+                        <Link
+                          href={child.href}
+                          className="block rounded-md px-2 py-1 text-slate-600 hover:bg-slate-100 hover:text-brand-600"
+                        >
+                          {child.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
           ))}
         </nav>
       </div>
@@ -36,12 +58,23 @@ export function SiteHeader() {
           isMenuOpen ? 'block' : 'hidden'
         )}
       >
-        <ul className="space-y-2 text-sm font-medium text-slate-700">
+        <ul className="space-y-3 text-sm font-medium text-slate-700">
           {navigation.map((item) => (
             <li key={item.href}>
-              <Link href={item.href} className="block rounded-md px-2 py-1 hover:bg-slate-100">
+              <Link href={item.href} className="block rounded-md px-2 py-1 font-semibold hover:bg-slate-100">
                 {item.label}
               </Link>
+              {item.children && (
+                <ul className="mt-2 space-y-1 border-l border-slate-200 pl-3 text-xs font-medium text-slate-600">
+                  {item.children.map((child) => (
+                    <li key={child.href}>
+                      <Link href={child.href} className="block rounded-md px-2 py-1 hover:bg-slate-100">
+                        {child.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </li>
           ))}
         </ul>
