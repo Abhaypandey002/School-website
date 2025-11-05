@@ -1,12 +1,16 @@
 import type { Metadata } from 'next';
 import { format } from 'date-fns';
-import { notices } from '@/src/data/content';
+import { getNotices } from '@/src/services/notices';
+
+export const revalidate = 0;
 
 export const metadata: Metadata = {
   title: 'Notices | Akshar Kids School'
 };
 
-export default function NoticesPage() {
+export default async function NoticesPage() {
+  const notices = await getNotices();
+
   return (
     <div className="bg-white py-16">
       <div className="container-edge">
@@ -22,13 +26,15 @@ export default function NoticesPage() {
                     Published on {format(new Date(notice.date), 'dd MMM yyyy')} · Category: General
                   </p>
                 </div>
-                <a href="#" className="text-sm font-medium text-brand-600">
-                  Download attachment
-                </a>
               </div>
               <p className="mt-4 text-slate-600">{notice.body}</p>
             </article>
           ))}
+          {notices.length === 0 && (
+            <p className="rounded-2xl border border-dashed border-slate-200 bg-white p-10 text-center text-sm text-slate-500">
+              No notices have been published yet.
+            </p>
+          )}
         </div>
       </div>
     </div>

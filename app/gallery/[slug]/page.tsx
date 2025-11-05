@@ -1,18 +1,21 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { format } from 'date-fns';
-import { galleryAlbums } from '@/src/data/gallery';
+import { getGalleryAlbum, getGalleryAlbums } from '@/src/services/gallery';
+
+export const revalidate = 0;
 
 interface AlbumPageProps {
   params: { slug: string };
 }
 
-export function generateStaticParams() {
-  return galleryAlbums.map((album) => ({ slug: album.slug }));
+export async function generateStaticParams() {
+  const albums = await getGalleryAlbums();
+  return albums.map((album) => ({ slug: album.slug }));
 }
 
-export function generateMetadata({ params }: AlbumPageProps): Metadata {
-  const album = galleryAlbums.find((item) => item.slug === params.slug);
+export async function generateMetadata({ params }: AlbumPageProps): Promise<Metadata> {
+  const album = await getGalleryAlbum(params.slug);
   if (!album) {
     return { title: 'Album not found | Akshar Kids School' };
   }
@@ -22,10 +25,10 @@ export function generateMetadata({ params }: AlbumPageProps): Metadata {
   };
 }
 
-export const dynamicParams = false;
+export const dynamicParams = true;
 
-export default function AlbumPage({ params }: AlbumPageProps) {
-  const album = galleryAlbums.find((item) => item.slug === params.slug);
+export default async function AlbumPage({ params }: AlbumPageProps) {
+  const album = await getGalleryAlbum(params.slug);
 
   if (!album) {
     notFound();
@@ -51,11 +54,16 @@ export default function AlbumPage({ params }: AlbumPageProps) {
 
         <div className="grid gap-6 sm:grid-cols-2">
           {album.images.map((image) => (
-            <figure key={image.src} className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+            <figure key={image.id} className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
               <img src={image.src} alt={image.alt} className="h-64 w-full object-cover" />
               <figcaption className="p-4 text-sm text-slate-600">{image.caption}</figcaption>
             </figure>
           ))}
+          {album.images.length === 0 && (
+            <p className="sm:col-span-2 rounded-2xl border border-dashed border-slate-200 bg-white p-10 text-center text-sm text-slate-500">
+              Photos will be added to this album soon.
+            </p>
+          )}
         </div>
       </div>
     </div>

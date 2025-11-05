@@ -1,0 +1,20 @@
+[
+  {
+    "id": "testimonial-1",
+    "name": "Anita Shah",
+    "role": "Parent of Std. 3 student",
+    "message": "Akshar Kids has nurtured my son into a confident reader and problem solver. The teachers truly care."
+  },
+  {
+    "id": "testimonial-2",
+    "name": "Rohan Desai",
+    "role": "Alumnus, Batch of 2020",
+    "message": "From science fairs to sports day, the school gave me every opportunity to explore my interests."
+  },
+  {
+    "id": "testimonial-3",
+    "name": "Meera Patel",
+    "role": "Nursery Parent",
+    "message": "The warm and safe environment helped my daughter settle in quickly. She looks forward to school every day!"
+  }
+]
