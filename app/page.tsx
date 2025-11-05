@@ -84,8 +84,13 @@ export default async function HomePage() {
 
   return (
     <div className="space-y-20 pb-16">
-      <section className="bg-gradient-to-br from-brand-500 via-brand-600 to-brand-700 py-16 text-white">
-        <div className="container-edge grid gap-12 lg:grid-cols-[2fr_1fr] lg:items-center">
+      <section className="relative overflow-hidden bg-gradient-to-br from-brand-500 via-brand-600 to-brand-700 py-16 text-white">
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute -left-12 top-20 h-72 w-72 rounded-full bg-amber-300/40 blur-3xl mix-blend-screen"></div>
+          <div className="absolute right-[-3rem] top-[-6rem] h-80 w-80 rounded-full bg-brand-300/40 blur-3xl mix-blend-screen"></div>
+          <div className="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-[2.5rem] border border-white/30 bg-white/10 shadow-[0_0_40px_-12px_rgba(255,255,255,0.8)] backdrop-blur-sm"></div>
+        </div>
+        <div className="container-edge relative z-10 grid gap-12 lg:grid-cols-[2fr_1fr] lg:items-center">
           <div className="space-y-6">
             <p className="text-sm uppercase tracking-[0.3em] text-brand-100">Now Enrolling</p>
             <h1 className="text-4xl font-bold sm:text-5xl">{hero.title}</h1>

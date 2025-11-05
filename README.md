@@ -33,6 +33,29 @@ npm run dev
 
 Visit [http://localhost:3000](http://localhost:3000) to view the site.
 
+### 4. Configure admin credentials (optional for local dev)
+
+Create a `.env.local` file with the following values to control who can access the admin dashboard:
+
+```
+NEXT_PUBLIC_ADMIN_ID=admin
+NEXT_PUBLIC_ADMIN_PASSWORD=password123
+```
+
+If the variables are not provided, the above defaults are used.
+
+## Admin Dashboard
+
+1. Navigate to `/admin/login` and authenticate with the configured admin ID and password.
+2. After signing in, you can:
+   - Publish, edit, and delete blackboard notices
+   - Create gallery albums, upload photo metadata, and manage album images
+   - Add, remove, and curate homepage testimonials
+   - Download inquiry submissions as CSV reports
+3. Use the **Log out** button in the dashboard header to clear your session when finished.
+
+The lightweight client-side guard stores a short-lived flag in `localStorage`. For production deployments, replace it with your preferred auth provider (e.g. NextAuth, Clerk, custom JWT service).
+
 ## Project Structure
 
 ```
@@ -65,7 +88,7 @@ storage/            # Runtime CSV + JSON data (gitignored)
 
 ## Roadmap Notes
 
-- Admin portal currently provides a roadmap placeholder. Integrate NextAuth + Prisma for secure role-based management.
+- Swap the client-side credential guard for a hardened auth strategy (NextAuth + Prisma, Clerk, etc.).
 - Extend the gallery with image uploads and thumbnail generation via `sharp`.
 - Add rate limiting, CAPTCHA, and email notifications to form submissions.
 
